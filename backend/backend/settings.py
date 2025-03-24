@@ -143,19 +143,26 @@ LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'logout'
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# # Get credencials from .env file
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+# # Get credencials using decouple (pip install python-decouple) 
 from decouple import config
 # default backend
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config("EMAIL_HOST", cast=str, default=None)
 EMAIL_PORT = config("EMAIL_PORT", cast=str, default='587') # Recommended
+# TLS and SSL are mutual exclusive: Use just one of them as <True>
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True)  # Use EMAIL_PORT 587 for TLS
+# EMAIL_USE_SSL = config("EMAIL_USE_TLS", cast=bool, default=False)  # Use MAIL_PORT 465 for SSL
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", cast=str, default=None)
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", cast=str, default=None)
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True)  # Use EMAIL_PORT 587 for TLS
-# EMAIL_USE_SSL = config("EMAIL_USE_TLS", cast=bool, default=False)  # EUse MAIL_PORT 465 for SSL
-
 ADMIN_USER_NAME=config("ADMIN_USER_NAME", default="Admin user")
 ADMIN_USER_EMAIL=config("ADMIN_USER_EMAIL", default=None)
-
 MANAGERS=[]
 ADMINS=[]
 if all([ADMIN_USER_NAME, ADMIN_USER_EMAIL]):
