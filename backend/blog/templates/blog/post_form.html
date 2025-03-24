@@ -1,0 +1,20 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+	<h1>post_form.html</h1>
+    <div class="content-section">
+
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="bottom-bottom mb-4">Create New Post</legend>
+                <p>post_form.html</p>
+                {{ form|crispy }}
+            </fieldset>
+            <div  class="form-group">
+                <button class="btn btn-outline-info" type="submit">Post</button>
+                <a href="{% url 'blog-home' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

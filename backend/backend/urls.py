@@ -22,15 +22,41 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('register/', users_views.register, name='register'),
-    path('profile/', users_views.profile, name='profile'),
-    path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
-    path("logout/", users_views.logout_view, name="logout"),
-    # path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
-	path('blog/', include('blog.urls')),
-	path ('', include('blog.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('admin/', 
+         admin.site.urls),
+    path('register/', 
+         users_views.register, 
+         name='register'),
+    path('profile/', 
+         users_views.profile, 
+         name='profile'),
+    path('login/', 
+         auth_views.LoginView.as_view(
+             template_name='users/login.html'), 
+         name='login'),
+    path('logout/', 
+         auth_views.LogoutView.as_view(
+             template_name='users/logout.html'), 
+         name='logout'),
+    path('password_reset/', 
+         auth_views.PasswordResetView.as_view(
+             template_name='users/password_reset.html'), 
+         name='password_reset'),
+    path('password_reset/done/', 
+         auth_views.PasswordResetDoneView.as_view(
+             template_name='users/password_reset_done.html'), 
+         name='password_reset_done'),
+    path('password_reset_confirm/<uidb64>/<token>', 
+        auth_views.PasswordResetConfirmView.as_view(
+            template_name='users/password_reset_confirm.html'), 
+        name='password_reset_confirm'),
+    # path('logout/', users_views.logout_view, name='logout'), <-- it goes directly to login form
+	path('blog/', 
+      include('blog.urls')),
+	path ('', 
+       include('blog.urls')),
+]
+# ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# if settings.DEBUG:
-#     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

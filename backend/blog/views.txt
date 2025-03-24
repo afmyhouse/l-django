@@ -1,0 +1,261 @@
+from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponse
+from django.views.generic import (
+	ListView, 
+	DetailView, 
+	CreateView,
+	UpdateView,
+	DeleteView)
+from .models import Post
+
+# def home(request):
+# 	return HttpResponse('<html><body><h1>Hey there !</h1></body></html>')
+
+
+# The following are "function-based views"
+# They are used to render the html templates
+# Here is how to use it:
+# def home(request):
+# 	return render(request, 'blog/home.html', {'posts': Post.objects.all()})
+#
+# The first argument is the request object, the second argument is the template name
+# and the third argument is a dictionary that contains the data that we want to pass to the template
+# In this case, we are passing a dictionary with a key called 'posts' that contains all the posts
+# The key 'posts' is used in the template to access the data
+# The template is located in the "blog" folder inside the "templates" folder
+# The template name is home.html
+# The template is an html file that uses the Django template language
+# The Django template language is used to access the data passed from the view
+# In this case, the data is a list of posts
+# The template will loop through the list of posts and display them on the page
+# The template will also display a title for the page
+#
+# The following is an example of a template that displays a list of posts:
+# <html>
+# 	<head>
+# 		<title>Blog Home</title>
+# 	</head>
+# 	<body>
+# 		<h1>Blog Home</h1>
+# 		{% for post in posts %}	# This is a for loop that loops through the list of posts	
+# 			<h2>{{ post.title }}</h2>	# This displays the title of the post
+# 			<p>{{ post.content }}</p>	# This displays the content of the post
+# 			<p>{{ post.date_posted }}</p>	# This displays the date the post was posted
+# 			<p>{{ post.author }}</p>	# This displays the author of the post
+# 		{% endfor %}	# This is the end of the for loop
+# 	</body>
+# </html>
+#
+# The Django template language uses curly braces to access
+# the data passed from the view
+# The curly braces are used to access variables
+# The curly braces with percent signs are used for control structures
+# In this case, the for loop is a control structure
+# The for loop loops through the list of posts
+# The post variable is used to access each post in the list
+# The post variable is an object that contains the data for each post
+# The post object has attributes that correspond to the fields in the Post model
+# The title attribute corresponds to the title field in the Post model
+# The content attribute corresponds to the content field in the Post model
+# The date_posted attribute corresponds to the date_posted field in the Post model
+# The author attribute corresponds to the author field in the Post model
+# The curly braces are used to access the attributes of the post object
+# The double curly braces are used to access the value of the attributes
+# The double curly braces with percent signs are used to access the value of the attributes
+# inside the for loop
+# The endfor tag is used to end the for loop
+#
+# The following is an example of a template that displays a single post:
+# <html>
+# 	<head>
+# 		<title>Post Detail</title>
+# 	</head>
+# 	<body>
+# 		<h1>{{ post.title }}</h1>	# This displays the title of the post
+# 		<p>{{ post.content }}</p>	# This displays the content of the post
+# 		<p>{{ post.date_posted }}</p>	# This displays the date the post was posted
+# 		<p>{{ post.author }}</p>	# This displays the author of the post
+# 	</body>
+# </html>
+#
+# The post variable is used to access the post object passed from the view
+# The post object contains the data for the post
+# The post object has attributes that correspond to the fields in the Post model
+# The title attribute corresponds to the title field in the Post model
+# The content attribute corresponds to the content field in the Post model
+# The date_posted attribute corresponds to the date_posted field in the Post model
+# The author attribute corresponds to the author field in the Post model
+# The double curly braces are used to access the value of the attributes
+# The double curly braces are used to access the value of the attributes
+# The value of the attributes is displayed on the page
+#
+# The following is an example of a template that displays a form to create a new post:
+# <html>
+# 	<head>
+# 		<title>Create Post</title>
+# 	</head>
+# 	<body>
+# 		<form method="POST">	# This is a form that uses the POST method
+# 			{% csrf_token %}	# This is a security token that prevents cross-site request forgery
+# 			{{ form.as_p }}	# This displays the form as a paragraph
+# 			<button type="submit">Create Post</button>	# This is a submit button
+# 		</form>	# This is the end of the form
+# 	</body>
+# </html>
+#
+# The form variable is used to access the form object passed from the view
+# The form object is an object that contains the form fields
+# The form object has attributes that correspond to the fields in the form
+# The form object has methods that correspond to the form methods
+# The as_p method is used to display the form as a paragraph
+# The form is displayed on the page as a paragraph
+# The form fields are displayed as input fields, text areas, select fields, radio buttons, check boxes, and submit buttons
+# The following is an example of a template that displays a form to update a post:
+# <html>
+# 	<head>
+# 		<title>Update Post</title>
+# 	</head>
+# 	<body>
+# 		<form method="POST">	# This is a form that uses the POST method
+# 			{% csrf_token %}	# This is a security token that prevents cross-site request forgery
+# 			{{ form.as_p }}	# This displays the form as a paragraph
+# 			<button type="submit">Update Post</button>	# This is a submit button
+# 		</form>	# This is the end of the form
+# 	</body>
+# </html>
+#
+# The form variable is used to access the form object passed from the view
+# The form object is an object that contains the form fields
+# The form object has attributes that correspond to the fields in the form
+# The form object has methods that correspond to the form methods
+# The as_p method is used to display the form as a paragraph
+# The form is displayed on the page as a paragraph
+# The form fields are displayed as input fields, text areas, select fields, radio buttons, check boxes, and submit buttons
+# The following is an example of a template that displays a form to delete a post:
+# <html>
+# 	<head>
+# 		<title>Delete Post</title>
+# 	</head>
+# 	<body>
+# 		<form method="POST">	# This is a form that uses the POST method
+# 			{% csrf_token %}	# This is a security token that prevents cross-site request forgery
+# 			<p>Are you sure you want to delete this post?</p>	# This is a confirmation message
+# 			<button type="submit">Delete Post</button>	# This is a submit button
+# 		</form>	# This is the end of the form
+# 	</body>
+# </html>
+#
+# The form variable is used to access the form object passed from the view
+# The form object is an object that contains the form fields
+# The form object has attributes that correspond to the fields in the form
+# The form object has methods that correspond to the form methods
+# The csrf_token tag is used to display the security token
+# The csrf_token tag is a security token that prevents cross-site request forgery
+# The csrf_token tag is used to prevent cross-site request forgery
+# The csrf_token tag is a security token that prevents cross-site request forgery
+
+def home(request):
+	context = {
+		'posts': Post.objects.all()
+	}
+	return render(request, 'blog/home.html', context)
+
+# The following "class-based views" are used to replace the "function-based views" above
+# The class-based views are more powerful and flexible than the function-based views
+#
+# By default, the "class-based views" look for a template with the following name:
+# <app>/<model>_<viewtype>.html
+# For example, for the PostListView, at the app named "blog" it will look for a template named:
+# blog/post_list.html
+# If you want to use a different template, you can use the template_name attribute to select a different template
+# For example:
+# template_name = 'blog/home.html'
+# this is needed if the html has a differente name from the default
+# where model : post, viewtype : list
+# The ListView class-based view is used to display a list of posts in a template called <app>/<model>_list.html
+# in this case the templtate is blog/post_list.html
+
+# The following is an example of a template that displays a list of posts using the ListView class-based view:
+# blog/tempaltes/blog/post_list.html
+# <html>
+# 	<head>
+# 		<title>Blog Home</title>
+# 	</head>
+# 	<body>
+# 		<h1>Blog Home</h1>
+# 		{% for post in posts %}	# This is a for loop that loops through the list of posts
+# 			<h2>{{ post.title }}</h2>	# This displays the title of the post
+# 			<p>{{ post.content }}</p>	# This displays the content of the post
+# 			<p>{{ post.date_posted }}</p>	# This displays the date the post was posted
+# 			<p>{{ post.author }}</p>	# This displays the author of the post
+# 		{% endfor %}	# This is the end of the for loop
+# 	</body>
+# </html>
+#
+class PostListView(ListView):
+	model = Post
+	# template_name = 'blog/home.html', this is needed if the html has a differente name from the default
+	# by default it is <app>/<model>_<viewtype>.html or blog/post_list.html, in this case
+	# where <model> : post, <viewtype> : list
+	context_object_name = 'posts'
+	ordering = ['-date_posted']
+	paginate_by = 5
+
+class PostDetailView(DetailView):
+	model = Post
+	# by default, PostDetailView uses the template: post_detail.html
+	# To turn it into a specific one, use the template_name attribute to
+	# select a differente template, for example
+	# template_name = 'blog/post_anyother_detail.html'
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+	model = Post
+	fields = ['title', 'content']
+	# by default, PostCreateView and PostUpdateView use the same template: post_form.html
+	# To turn it into a specific one, use the template_name attribute to
+	# select a differente template
+	# template_name = 'blog/post_form.html'
+
+	def form_valid(self, form):
+		form.instance.author = self.request.user
+		return super().form_valid(form)
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+	model = Post
+	fields = ['title', 'content']
+	# by dfault, PostCreateView and PostUpdateView use the same template: post_form.html
+	# To turn it into a specific one, use the template_name attribute to
+	# select a differente template
+	template_name = 'blog/post_update.html'
+
+	def form_valid(self, form):
+		form.instance.author = self.request.user
+		return super().form_valid(form)
+	
+	def test_func(self):
+		post = self.get_object()
+		if self.request.user == post.author:
+			return True
+		return False
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+	model = Post
+	# by default, PostDeleteView uses the template: post_confirm_delete.html
+	# To turn it into a specific one, use the template_name attribute to
+	# select a differente template, for example
+	# template_name = 'blog/post_confirm.html
+	def test_func(self):
+		post = self.get_object()
+		if self.request.user == post.author:
+			return True
+		return False
+	
+	success_url = '/'
+
+def about(request):
+	return render(request, 'blog/about.html', {'title': 'All About'})
+
+def contact(request):
+	return render(request, 'blog/contact.html')
+
