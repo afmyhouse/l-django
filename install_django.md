@@ -1,46 +1,90 @@
+All we need to setup a django server
+
+## Start by installing python-pip
+
+```bash
+sudo apt-get install python3-pip
+```
+
+get virtual environment to work
+
+```bash
+sudo apt-get install python3-venv
+```
+
+## Create a new virtual environment inside project folder
+
+### 1 create
+```bash
+python3 -m venv django-project-folder/venv
+```
+
+### 2 Check it exists
+
+```bash
+ls django-project-folder/
+```
+result:
+```bash
+blog djhango-project-name media requirements.txt venv 
+db.sqlite3 manange.py users
+```
+
+### 3 go there
+
+```bash
+cd django-project-folder
+```
+
+### 4 Activate it
+
+```bash
+source venv/bin/activate 
+```
+
 Aqui está um setup eficiente para criar um ambiente virtual Python e instalar Django + Django REST Framework (DRF):  
 
-### 1. **Criar e ativar um ambiente virtual**  
+## **2 Install dependencies**
 ```bash
-python3 -m venv venv
-source venv/bin/activate  # Linux/macOS
-venv\Scripts\activate      # Windows (cmd)
-```
-
-### 2. **Atualizar `pip` e instalar dependências**  
-```bash
-pip install --upgrade pip
 pip install django djangorestframework
 ```
+_if you haven't yet_
 
-### 3. **Criar um projeto Django**  
+and the required packages:
 ```bash
-django-admin startproject myproject
-cd myproject
+pip install -r requirements.txt
 ```
 
-### 4. **Criar um app Django para API**  
+## **3 Create the project
+
+### 3.1. **Create a django project**  
 ```bash
-python manage.py startapp api
+django-admin startproject django_myproject_name
+cd django_myproject_name
 ```
 
-### 5. **Adicionar DRF ao projeto (`settings.py`)**  
-Edite `myproject/settings.py` e adicione `rest_framework` em `INSTALLED_APPS`:  
+### 4. **Create an app Django for API**  
+```bash
+python manage.py startapp app_name
+```
+
+### 5. **Add DRF(django rest framework) to the project (`settings.py` file)**  
+
+Edit `myproject/settings.py` and add `rest_framework` at `INSTALLED_APPS`:  
+
 ```python
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     ...
-    'rest_framework',
-    'api',  # Seu app
+    'rest_framework', # this line here
+    'api_name',  # your app, and this line too
 ]
 ```
 
-### 6. **Rodar as migrações e iniciar o servidor**  
+### 6. **Execute migrations e boot up server**  
+
 ```bash
 python manage.py migrate
 python manage.py runserver
 ```
-
-Agora você tem um ambiente pronto com Django e DRF! 🚀  
-Se precisar de autenticação, serializers ou views, só avisar.
